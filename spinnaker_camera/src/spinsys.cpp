@@ -35,9 +35,14 @@ SpinSystem::~SpinSystem() {
     sys->ReleaseInstance();
 }
 
-void SpinSystem::init_cameras() {
+void SpinSystem::init_cameras(
+    SpinnakerCameraContainer::AcquisitionMode acq_mode,
+    SpinnakerCameraContainer::BufferMode buf_mode
+) {
     for(int i = 0; i < cameras.size(); i++) {
         cameras[i].init();
+        cameras[i].set_acquisition_mode(acq_mode);
+        cameras[i].set_buffer_mode(buf_mode);
     }
 }
 

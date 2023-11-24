@@ -14,7 +14,10 @@ public:
     SpinSystem();
     ~SpinSystem();
 
-    void init_cameras();
+    void init_cameras(
+        SpinnakerCameraContainer::AcquisitionMode acq_mode,
+        SpinnakerCameraContainer::BufferMode buf_mode
+    );
     void deinit_cameras();
 
     std::vector<SpinnakerCameraContainer> cameras;
