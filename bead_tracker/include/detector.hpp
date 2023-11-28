@@ -15,6 +15,7 @@
 struct Bead {
     cv::Point2f center;
     std::vector<float> scores;
+    std::vector<cv::Point> contour;
     float area, weighted_score = 0.0f;
 };
 
@@ -24,12 +25,12 @@ public:
     BeadDetector(
         cv::Mat roi,
         std::vector<float> score_weights,
-        uint8_t min_v = 130,
-        uint8_t max_v = 170,
+        uint8_t min_v = 60,
+        uint8_t max_v = 110,
         uint8_t blur_radius = 5,
-        uint8_t mask_dilate_radius = 9,
-        uint8_t detection_erosion_radius = 2,
-        unsigned int bead_area = 1150
+        uint8_t mask_dilate_radius = 7,
+        uint8_t detection_erosion_radius = 3,
+        unsigned int bead_area = 250
     ) : roi(roi), 
         s_w(score_weights), 
         min_hsv(0, 0, min_v), 
