@@ -25,12 +25,12 @@ public:
     BeadDetector(
         cv::Mat roi,
         std::vector<float> score_weights,
-        uint8_t min_v = 60,
+        uint8_t min_v = 70,
         uint8_t max_v = 110,
         uint8_t blur_radius = 5,
         uint8_t mask_dilate_radius = 7,
         uint8_t detection_erosion_radius = 3,
-        unsigned int bead_area = 250
+        unsigned int bead_area = 400
     ) : roi(roi), 
         s_w(score_weights), 
         min_hsv(0, 0, min_v), 
