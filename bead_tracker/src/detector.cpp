@@ -4,6 +4,7 @@
 void BeadDetector::find(cv::Mat frame, std::vector<Bead> &beads) {
     cv::Mat hsv, grey, detections, mask, tmp;
     std::vector<std::vector<cv::Point>> contours;
+    beads.clear();
 
     // // Grayscale & HSV
     cv::cvtColor(frame, grey, cv::COLOR_BGR2GRAY);
@@ -48,7 +49,8 @@ void BeadDetector::find(cv::Mat frame, std::vector<Bead> &beads) {
 
         bead.contour = contour;
 
-        beads.push_back(bead);
+        if (bead.weighted_score > 0.35f)
+            beads.push_back(bead);
     }
 
     std::sort(beads.begin(), beads.end(), [](Bead a, Bead b) {

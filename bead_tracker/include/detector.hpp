@@ -22,6 +22,7 @@ struct Bead {
 
 class BeadDetector {
 public:
+    BeadDetector() = delete;
     BeadDetector(
         cv::Mat roi,
         std::vector<float> score_weights,

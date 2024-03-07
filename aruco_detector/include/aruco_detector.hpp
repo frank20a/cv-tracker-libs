@@ -1,43 +1,41 @@
+#pragma once
+
 #include <opencv2/core.hpp>
 #include <opencv2/aruco.hpp>
 #include <iostream>
+#include <algorithm>
+#include <map>
+#include <vector>
 
 
-bool readCameraParameters(std::string filename, cv::Mat& cameraMatrix, cv::Mat& distCoeffs) {
-    cv::FileStorage fs(filename, cv::FileStorage::READ);
-    if (!fs.isOpened()) {
-        std::cout << "Failed to open camera_params.yml" << std::endl;
-        return false;
-    }
-
-    fs["camera_matrix"] >> cameraMatrix;
-    fs["distortion_coefficients"] >> distCoeffs;
-
-    return true;
-}
+struct Marker {
+    int id;
+    std::vector<cv::Point2f> corners;
+    cv::Vec3d rvec, tvec;
+};
 
 
 class ArucoDetector {
 public:
-    ArucoDetector(std::string camera_calib_file);
-    void detect(
-        const cv::Mat& image, 
-        std::vector<int>& ids, 
-        std::vector<std::vector<cv::Point2f>>& corners,
+
+    ArucoDetector() = delete;
+    ArucoDetector(cv::Mat cameraMatrix, cv::Mat distCoeffs) : cameraMatrix(cameraMatrix), distCoeffs(distCoeffs) {}
+    void detect_markers(
+        const cv::Mat& image,
+        std::map<const int, Marker>& detections,
+        float marker_size,
         bool draw_markers = false
     );
-    void detect(
-        const cv::Mat& image, 
-        std::vector<int>& ids, 
-        std::vector<std::vector<cv::Point2f>>& corners,
-        float marker_size,
-        std::vector<cv::Vec3d> &rvecs,
-        std::vector<cv::Vec3d> &tvecs,
-        bool draw_markers = false
+    int detect_board(
+        const cv::Mat& image,
+        const cv::Ptr<cv::aruco::Board> board,
+        Marker& detection
     );
 
 private:
-    cv::Ptr<cv::aruco::DetectorParameters> detector_params;
-    cv::Ptr<cv::aruco::Dictionary> dictionary;
+    static const cv::Ptr<cv::aruco::DetectorParameters> detector_params;
+    static const cv::Ptr<cv::aruco::Dictionary> dictionary;
+    std::vector<std::vector<cv::Point2f>> corners, rejected;
+    std::vector<int> ids;
     cv::Mat cameraMatrix, distCoeffs;
 };
