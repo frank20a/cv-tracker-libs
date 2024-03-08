@@ -7,37 +7,46 @@ const cv::Ptr<cv::aruco::Dictionary> ArucoDetector::dictionary = cv::aruco::getP
 
 void ArucoDetector::detect_markers(
         const cv::Mat& image,
-        std::map<const int, Marker>& detections,
-        float marker_size,
         bool draw_markers
 ) {
     corners.clear();
     ids.clear();
 
-    cv::aruco::detectMarkers(image, dictionary, corners, ids, detector_params, rejected, cameraMatrix, distCoeffs);
-    
-    if (marker_size > 0) {
-        if (draw_markers) {
-            cv::aruco::drawDetectedMarkers(image, corners, ids);
-        }
+    cv::aruco::detectMarkers(
+        image, 
+        dictionary,
+        corners,
+        ids, 
+        detector_params,
+        rejected,
+        cameraMatrix,
+        distCoeffs
+    );
 
-        std::vector<cv::Vec3d> rvecs, tvecs;
-        cv::aruco::estimatePoseSingleMarkers(corners, marker_size, cameraMatrix, distCoeffs, rvecs, tvecs);
+    if (draw_markers) {
+        cv::aruco::drawDetectedMarkers(image, corners, ids);
+    }
+}
 
-        detections.clear();
-        for(int i = 0; i < ids.size(); i++) {
-            Marker m;
-            m.id = ids[i];
-            m.corners = corners[i];
-            m.rvec = rvecs[i];
-            m.tvec = tvecs[i];
+void ArucoDetector::get_detections(
+    std::map<const int, Marker>& detections, 
+    float marker_size
+) {
+    if (marker_size <= 0)
+        return;
 
-            detections.insert(std::pair<int, Marker>(m.id, m));
-        }
-        // std::sort(detections.begin(), detections.end(), [](const Marker& a, const Marker& b) {
-        //     return a.id < b.id;
-        // });
-        
+    std::vector<cv::Vec3d> rvecs, tvecs;
+    cv::aruco::estimatePoseSingleMarkers(corners, marker_size, cameraMatrix, distCoeffs, rvecs, tvecs);
+
+    detections.clear();
+    for(int i = 0; i < ids.size(); i++) {
+        Marker m;
+        m.id = ids[i];
+        m.corners = corners[i];
+        m.rvec = rvecs[i];
+        m.tvec = tvecs[i];
+
+        detections.insert(std::pair<int, Marker>(m.id, m));
     }
 }
 

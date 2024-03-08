@@ -22,8 +22,6 @@ public:
     ArucoDetector(cv::Mat cameraMatrix, cv::Mat distCoeffs) : cameraMatrix(cameraMatrix), distCoeffs(distCoeffs) {}
     void detect_markers(
         const cv::Mat& image,
-        std::map<const int, Marker>& detections,
-        float marker_size,
         bool draw_markers = false
     );
     int detect_board(
@@ -31,6 +29,7 @@ public:
         const cv::Ptr<cv::aruco::Board> board,
         Marker& detection
     );
+    void get_detections(std::map<const int, Marker>& detections, float marker_size);
 
 private:
     static const cv::Ptr<cv::aruco::DetectorParameters> detector_params;
