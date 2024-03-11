@@ -8,11 +8,11 @@ ROISelector::ROISelector() {
 
 cv::Mat ROISelector::get(cv::Mat &frame) {
 
-    std::cout << "[ROI] Select ROI or press \'q\' to continue" << std::endl;
+    std::cout << "[ROI] Select ROI or press \'ESC\' to continue" << std::endl;
     for(;;) {
         cv::Mat frame_copy = frame.clone();
 
-        if (cv::waitKey(10) == 'q')
+        if (cv::waitKey(10) == 27)
             break;
         
         for(int i = 0; i < roi.size(); i++) {
