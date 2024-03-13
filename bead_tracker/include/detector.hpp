@@ -31,7 +31,9 @@ public:
         uint8_t blur_radius = 5,
         uint8_t mask_dilate_radius = 7,
         uint8_t detection_erosion_radius = 3,
-        unsigned int bead_area = 400
+        unsigned int bead_min_area = 80,
+        unsigned int bead_max_area = 350,
+        unsigned int bead_nominal_area = 150
     ) : roi(roi), 
         s_w(score_weights), 
         min_hsv(0, 0, min_v), 
@@ -58,7 +60,9 @@ public:
                 )
             )
         ),
-        b_a(bead_area) 
+        b_a_min(bead_min_area),
+        b_a_max(bead_max_area),
+        b_a_nom(bead_nominal_area)
     {};
     void find(cv::Mat frame, std::vector<Bead> &beads);
 
@@ -67,6 +71,6 @@ private:
     cv::Mat dilate_element, erode_element;
     std::vector<float> s_w;
     cv::Size b_r;
-    unsigned int b_a;
+    unsigned int b_a_min, b_a_max, b_a_nom;
     cv::Scalar min_hsv, max_hsv;
 };
